@@ -1,0 +1,87 @@
+en
+conf t
+host R1
+interface GigabitEthernet0/0
+ip address 172.22.34.65 255.255.255.224
+no shut
+interface GigabitEthernet0/1
+ip address 172.22.34.97 255.255.255.240
+no shut
+interface GigabitEthernet0/2
+ip address 172.22.34.1 255.255.255.192
+no shut
+^Z
+exit
+
+show ip interface brief
+
+then go to PC1 command prompt------
+ping 172.22.34.98
+ping 172.22.34.62
+
+then go to PC2 Command prompt-------
+ping 172.22.34.66
+
+now go to ROUTER CLI----------------
+en
+conf t
+access-list ?
+access-list 100 ?
+access-list 100 permit ?
+access-list 100 permit tcp ?
+access-list 100 permit tcp 172.22.34.64 ?
+access-list 100 permit tcp 172.22.34.64 0.0.0.31 ?
+access-list 100 permit tcp 172.22.34.64 0.0.0.31 host ?
+access-list 100 permit tcp 172.22.34.64 0.0.0.31 host 172.22.34.62 ?
+access-list 100 permit tcp 172.22.34.64 0.0.0.31 host 172.22.34.62 eq ?
+access-list 100 permit tcp 172.22.34.64 0.0.0.31 host 172.22.34.62 eq ftp
+access-list 100 permit icmp 172.22.34.64 0.0.0.31 host 172.22.34.62 
+interface GigabitEthernet0/0
+ip access-group 100 in
+^Z
+exit
+
+now go to PC1 Command prompt----------------
+ftp 172.22.34.62
+username is cisco
+password is cisco
+quit
+ping 172.22.34.98
+
+now go to ROUTER CLI---------------
+en
+conf t
+ip access-list ?
+ip access-list extended ?
+ip access-list extended HTTP_ACL
+permit tcp 172.22.34.96 ?
+permit tcp 172.22.34.96 0.0.0.15 ?
+permit tcp 172.22.34.96 0.0.0.15 host ?
+permit tcp 172.22.34.96 0.0.0.15 host 172.22.34.62 ?
+permit tcp 172.22.34.96 0.0.0.15 host 172.22.34.62 eq ?
+permit tcp 172.22.34.96 0.0.0.15 host 172.22.34.62 eq www
+permit icmp 172.22.34.96 0.0.0.15 host 172.22.34.62 
+interface GigabitEthernet0/1
+ip access-group HTTP_ACL in
+^Z
+exit
+
+now go to PC2 Command prompt------------------
+ping 172.22.24.66
+ftp 172.22.34.62
+
+now go to PC2 WEB BROWSER--------------------
+http://172.22.34.62
+
+
+
+
+
+
+
+
+
+
+
+
+
